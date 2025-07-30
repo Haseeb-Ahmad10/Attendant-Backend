@@ -119,7 +119,7 @@ login: async (req, res) => {
 },
 get: async (req, res) => {
     try {
-        const user = Users.findAndCountAll({})
+        const user = await Users.findAndCountAll({})
         res.status(200).send({ user })
     } catch (err) {
         res.status(500).send("Something went wrong")
