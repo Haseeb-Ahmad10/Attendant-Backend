@@ -95,6 +95,38 @@ login: async (req, res) => {
              res.status(500).json({message: 'Server error'})
         }
     },
+    signup: async( req, res) => {
+        try {
+            const {name, email, phone, password, role} = req.body;
+            if(!name || !email, !phone, !password) {
+                return res.status(400).json({message: 'All fields are required'})
+            }
+
+            const existingUser = Users.findOne({where: {email}})
+            if(existingUser) {
+                return res.status(400).json({message: 'Email already in use, please choose another one'})
+            }
+            
+            const salt = await bcrypt.genSalt(12)
+            const hashedPassword = await bcrypt.hash(password, salt)
+
+            const newUser = Users.create({name, email, phone, password: hashedPassword, role: role || 'user', createAt: moment().unix(), updatadAt: moment().unix()})
+
+            // success respone
+              const userResponse = {
+                 id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                phone: newUser.phone,
+                role: newUser.role,
+                createdAt: newUser.createdAt
+              };
+              res.status(200).json({message: 'User created successfully',user: userResponse})
+        } catch (err) {
+            console.log(err)
+             res.status(500).json({message: 'Server error'})
+        }
+    },
 
     create: async (req, res) => {
         try{

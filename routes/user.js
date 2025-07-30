@@ -4,6 +4,7 @@ const router = Router();
 const controller = require('../controllers/user');
 
 router.post("/login", controller.login)
+router.post("/signup", controller.signup)
 router.post("/", controller.create);
 router.get("/", controller.get)
 // router.delete("/:userId", controller.delete)

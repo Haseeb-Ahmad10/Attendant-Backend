@@ -12,22 +12,35 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true
          },
-        username: {
+        name: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        email: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
         },
-        pin: {
+        phone: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        password: {
             type: Sequelize.STRING,
             allowNull: false
         },
-          createdAt: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+         role: {
+             type: Sequelize.ENUM('admin', 'user'),
+             allowNull: false,
+             defaultValue: 'user'
+        },
+        createdAt: {
+            type: Sequelize.INTEGER,
+            allowNull: false
         },
         updatedAt: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+            type: Sequelize.INTEGER,
+            allowNull: false
         },
       })
     },

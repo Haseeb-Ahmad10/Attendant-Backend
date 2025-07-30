@@ -10,22 +10,35 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
          },
-        username: {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        email: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
         },
-        pin: {
+        phone: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        password: {
             type: DataTypes.STRING,
             allowNull: false
         },
-          createdAt: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+         role: {
+             type: DataTypes.ENUM('admin', 'user'),
+             allowNull: false,
+             defaultValue: 'user'
+        },
+        createdAt: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         updatedAt: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         })
 
