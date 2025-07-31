@@ -72,24 +72,39 @@
 const { users: Users } = require('../models/index')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
+const jwt = require('jsonwebtoken')
+const { jwt_secret } = require('../constants/index')
 
 module.exports = {
 login: async (req, res) => {
       try {
-            const { username, pin } = req.body
+            const { email, password} = req.body
 
-            if(!username || ! pin) {
-                return res.status(400).json({message: 'Username and PIN are required'})
+            if(!email || ! password) {
+                return res.status(400).json({message: 'email and password are required'})
             }
 
             const user = await Users.findOne({
-                where: { username, pin }
+                where: { email }
             })
 
             if(!user) {
-                return res.status(401).json({message: 'Invalid Username or PIN'})
+                return res.status(401).json({message: 'Invalid email or password'})
             }
-            return res.status(200).json({redirectTo: '/dashboard'})
+
+            // Comparing password
+            const isPasswordMatch = await bcrypt.compare(password, user.password)
+
+            if(!isPasswordMatch) {
+                return res.status(401).json({message: 'Invalid email or password'})
+            }
+
+            // create jwt token
+            const token = jwt.sign({ id: user.id, email: user.emial}, jwt_secret, {expiresIn: '1h'})
+
+            return res.status(200).json({message: 'Login successful', token, 
+            // redirectTo: '/dashboard'
+            });
         } catch (err) {
             console.log(err)
              res.status(500).json({message: 'Server error'})
