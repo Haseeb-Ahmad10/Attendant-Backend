@@ -1,6 +1,6 @@
 const { jwt_secret } = require('../constants/index')
 
-const authenticateJWT = (req, res, next) => {
+module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization
     const token = authHeader && authHeader.split(' ')[1]
     if(!token) {

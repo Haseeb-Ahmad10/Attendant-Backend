@@ -100,10 +100,12 @@ login: async (req, res) => {
             }
 
             // create jwt token
-            const token = jwt.sign({ id: user.id, email: user.emial}, jwt_secret, {expiresIn: '1h'})
+            const token = jwt.sign({ id: user.id, email: user.email}, jwt_secret, {expiresIn: '1h'})
+            // console.log(token)
 
             return res.status(200).json({message: 'Login successful', token, 
-            // redirectTo: '/dashboard'
+              user: { id: user.id, email: user.email, name: user.name, role: user.role }, 
+            redirectTo: '/dashboard'
             });
         } catch (err) {
             console.log(err)
@@ -117,7 +119,7 @@ login: async (req, res) => {
                 return res.status(400).json({message: 'All fields are required'})
             }
 
-            const existingUser = Users.findOne({where: {email}})
+            const existingUser = await Users.findOne({where: {email}})
             if(existingUser) {
                 return res.status(400).json({message: 'Email already in use, please choose another one'})
             }
@@ -125,7 +127,7 @@ login: async (req, res) => {
             const salt = await bcrypt.genSalt(12)
             const hashedPassword = await bcrypt.hash(password, salt)
 
-            const newUser = Users.create({name, email, phone, password: hashedPassword, role: role || 'user', createAt: moment().unix(), updatadAt: moment().unix()})
+            const newUser = await Users.create({name, email, phone, password: hashedPassword, role: role || 'user', createdAt: moment().unix(), updatedAt: moment().unix()})
 
             // success respone
               const userResponse = {
