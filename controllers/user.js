@@ -175,5 +175,22 @@ get: async (req, res) => {
     }
     
 },
+delete: async (req, res) => {
+    try {
+        let { userId } = req.params;
+        if(!userId) {
+            return res.status(400).send('Product ID is required')
+        }
+        userId = Number(userId)
+        await Users.destroy({
+            where: {
+                id: userId
+            }
+        })
+        res.status(200).send('User deleted successfully')
+    }  catch (err) {
+        res.status(500).send("Something went wrong")
+    }
+}
 
 }
